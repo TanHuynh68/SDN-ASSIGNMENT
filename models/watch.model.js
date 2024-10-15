@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
 const Schema = mongoose.Schema;
+const {commentSchema} = require("./comment.model");
 
 const watchSchema = new Schema({
     watchName: { type: String, require: true },
@@ -13,4 +14,4 @@ const watchSchema = new Schema({
 
 
 
-module.exports = mongoose.model('member', watchSchema);
+module.exports = mongoose.model('watch', watchSchema);

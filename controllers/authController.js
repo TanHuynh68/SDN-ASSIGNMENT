@@ -30,7 +30,6 @@ class authController {
             res.status(500).send("An error occurred");
         }
     }
-
     login = async (req, res) => {
         const { name, password } = req.body;
         console.log(name, password);
@@ -61,7 +60,6 @@ class authController {
             res.status(500).send("An error occurred");
         }
     }
-
     logout = (req, res) => {
         const cookies = req.cookies;
         console.log("handle logout")

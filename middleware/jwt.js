@@ -18,6 +18,8 @@ const checkToken = (req, res, next) => {
         console.log("decoded", decoded)
         if(decoded.isAdmin){
             return res.redirect("/admin");
+        }else{
+            return res.redirect("/")
         }
     }
 };

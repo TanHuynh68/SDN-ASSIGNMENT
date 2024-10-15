@@ -1,5 +1,8 @@
 var express = require('express');
 const { checkToken } = require('../middleware/jwt');
+const watchController = require('../controllers/watchController');
+const { PATH } = require('../const');
+const pageController = require('../controllers/pageController');
 var router = express.Router();
 
 /* GET home page. */
@@ -11,7 +14,7 @@ router.get('/login',checkToken, function(req, res, next) {
   res.render('login', { title: 'Login Page' });
 });
 
-router.get('/admin', function(req, res, next) {
-  res.render('admin', { title: 'admin Page' });
-});
+router.route(PATH.ADMIN_PAGE).get(pageController.getAdminPage)
+
+
 module.exports = router;

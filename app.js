@@ -6,6 +6,8 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 var indexRouter = require('./routes/index');
 var memberRouter = require('./routes/member');
+var brandRouter = require('./routes/brand.route');
+var watchRouter = require('./routes/watch.route');
 var authRouter = require('./routes/auth');
 var cookieParser = require('cookie-parser');
 var app = express();
@@ -23,6 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/members', memberRouter);
 app.use('/auth', authRouter);
+app.use('/brand', brandRouter);
+app.use('/watch', watchRouter);
 // connect db
 const url = "mongodb://localhost:27017/sdn-assignment"
 const connect = mongoose.connect(url);
