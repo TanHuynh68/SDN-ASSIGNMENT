@@ -1,40 +1,51 @@
-const { createToken } = require("../middleware/jwt");
+const { createToken } = require("../middleware/jwt.middleware");
 const members = require("../models/member.model");
 require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
+const showValiDateResult = require("../middleware/showValidateResult");
+const { getMemberService } = require("../services/auth.service");
+
 const SECRET_KEY = process.env.SECRET_KEY;
 const EXPIRES_IN = process.env.EXPIRES_IN;
 class authController {
     register = async (req, res) => {
-        const { name, password } = req.body;
-        if (!name || !password) {
-            return res.status(400).send("Name and password are required");
-        }
+        const validationErrors = showValiDateResult(req, res)
+        if (validationErrors) return;
+        const { memberName, password, name } = req.body;
         try {
+            const isExsistMember = await getMemberService(req, res, memberName)
+            if (isExsistMember.length > 0) {
+                return res.status(400).json({
+                    message: "memberName is Exsisted",
+                    data: isExsistMember
+                });
+            }
             const hashedPassword = await bcrypt.hash(password, 10);
-            const response = await members.create({ name: name, password: hashedPassword });
+            const response = await members.create({ memberName: memberName, password: hashedPassword, name: name });
             console.log("response: ", response)
             if (response) {
                 console.log("Create Successfully!");
                 res.status(201).json({
-                    message: "Create Successfully!",
+                    message: "Create Account Successfully!",
                     data: response
                 });
             } else {
-                console.log("Login Failed!");
-                res.status(401).send("Invalid email or password");
+                console.log("Create Failed!");
+                res.status(500).send("Internal Server Error");
             }
         } catch (error) {
             console.error(error);
             res.status(500).send("An error occurred");
         }
     }
+
     login = async (req, res) => {
-        const { name, password } = req.body;
-        console.log(name, password);
+        const { memberName, password } = req.body;
+        const validationErrors = showValiDateResult(req, res)
+        if (validationErrors) return;
         try {
-            const member = await members.findOne({ name: name });
+            const member = await members.findOne({ memberName: memberName });
             if (member) {
                 const isMatch = await bcrypt.compare(password, member.password);
                 if (isMatch) {
@@ -43,21 +54,22 @@ class authController {
                         SECRET_KEY,
                         { expiresIn: EXPIRES_IN }
                     );
-
-                    console.log("Login Successfully!");
                     res.cookie('token', token, { httpOnly: true, secure: true });
-                    res.redirect(`/admin`);
+                    return res.status(200).json({
+                        message: "Login Successfully!",
+                        token: token,
+                    });
+                    // res.redirect(`/admin`);
                 } else {
                     console.log("Login Failed: Invalid password");
-                    return res.render('login'); // Hoặc bạn có thể sử dụng res.status(401).send("Invalid password");
+                    res.status(401).json({ message: "Password Invalid" });
                 }
             } else {
-                console.log("User not found!");
-                res.render('login');
+                res.status(401).json({ message: "User Not Found" });
             }
         } catch (error) {
             console.error(error);
-            res.status(500).send("An error occurred");
+            res.status(500).json({ message: "An error occurred" });
         }
     }
     logout = (req, res) => {

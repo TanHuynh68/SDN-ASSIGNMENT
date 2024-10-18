@@ -6,6 +6,9 @@ class pageController {
         const getWatchesFromAdmin = await getWatchesService(req, res);
         return res.render("admin", {data: getWatchesFromAdmin})
     }
+    getRegisterPage = async (req, res) => {
+        return res.render("register")
+    }
 }
 
 module.exports = new pageController();

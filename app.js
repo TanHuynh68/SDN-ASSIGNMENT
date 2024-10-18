@@ -5,10 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var indexRouter = require('./routes/index');
-var memberRouter = require('./routes/member');
+var memberRouter = require('./routes/member.route');
 var brandRouter = require('./routes/brand.route');
 var watchRouter = require('./routes/watch.route');
 var authRouter = require('./routes/auth');
+var pathRoute = require('./routes/page.route');
 var cookieParser = require('cookie-parser');
 var app = express();
 
@@ -23,16 +24,22 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/members', memberRouter);
-app.use('/auth', authRouter);
-app.use('/brand', brandRouter);
-app.use('/watch', watchRouter);
+app.use('/api/members', memberRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/brands', brandRouter);
+app.use('/api/watches', watchRouter);
+app.use('/page/', pathRoute);
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const connectDB = require('./config/connectDB');
 // connect db
-const url = "mongodb://localhost:27017/sdn-assignment"
-const connect = mongoose.connect(url);
-connect.then((db)=>{
-  console.log("Connect Successfully!")
-}, (err)=>{console.log("err: ", err)})
+
+// const connect = mongoose.connect(uri);
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+connectDB();
+
+// connect.then((db)=>{
+//   console.log("Connect Successfully!")
+// }, (err)=>{console.log("err: ", err)})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

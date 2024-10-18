@@ -1,5 +1,5 @@
 var express = require('express');
-const { checkToken } = require('../middleware/jwt');
+const { checkToken } = require('../middleware/jwt.middleware');
 const watchController = require('../controllers/watchController');
 const { PATH } = require('../const');
 const pageController = require('../controllers/pageController');

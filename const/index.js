@@ -1,4 +1,4 @@
 
 const PATH = require("./path")
-
-module.exports ={PATH}
+const API_ROUTE = require("./apiRoute")
+module.exports ={PATH, API_ROUTE}
