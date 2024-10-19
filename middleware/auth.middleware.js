@@ -1,16 +1,27 @@
-const { body } = require('express-validator');
+const { body, check } = require('express-validator');
 
-class authMiddleWare{
-     validateRegister = [
+class authMiddleWare {
+    validateRegister = [
         body('memberName').notEmpty().withMessage('memberName is required!'),
         body('password').notEmpty().withMessage('password is required!'),
+        check('password')
+            .isLength({ min: 6 }) // Đảm bảo độ dài ít nhất là 6 ký tự
+            .withMessage('password must be at least 6 digits long.')
+            .matches(/^\d+$/) // Đảm bảo chỉ chứa số
+            .withMessage('password must only contain digits.'),
         body('name').notEmpty().withMessage('name is required!'),
     ];
-    
-     loginValidate = [
+
+    loginValidate = [
         body('memberName').notEmpty().withMessage('memberName is required!'),
         body('password').notEmpty().withMessage('password is required!'),
+        check('password')
+            .isLength({ min: 6 }) // Đảm bảo độ dài ít nhất là 6 ký tự
+            .withMessage('password must be at least 6 digits long.')
+            .matches(/^\d+$/) // Đảm bảo chỉ chứa số
+            .withMessage('password must only contain digits.'),
+        body('name').notEmpty().withMessage('name is required!'),
     ];
 }
 
-module.exports = new  authMiddleWare();
+module.exports = new authMiddleWare();

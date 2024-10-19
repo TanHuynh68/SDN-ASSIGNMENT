@@ -1,10 +1,22 @@
-const PATH = {
+const API_ROUTE = {
     //member
     "GET_ALL_MEMBER": "/",
     "GET_MEMBER_DETAIL": "/:id",
     "CHANGE_PASSWORD": "/change-password",
     "DELETE_MEMBER": "/delete/:id",
     "RESTORE_MEMBER": "/restore/:id",
+    "EDIT_MEMBER": "/edit/:id",
+    //watch
+    "GET_ALL_WATCH": "/get-all",
+    "CREATE_WATCH": "/",
+    "GET_WATCH": "/:id",
+    "EDIT_WATCH": "/:id",
+    "DELETE_WATCH": "/delete/:id",
+    "RESTORE_WATCH": "/restore/:id",
+    //brand
+    "GET_ALL_BRANDS": "/get-all",
+    "CREATE_BRAND": "/",
+    "GET_BRAND": "/:id",
 }
 
-module.exports = PATH;
+module.exports = API_ROUTE;

@@ -4,7 +4,7 @@ const PATH = {
     "LOGOUT": "/logout",
     //brand
     "CREATE_BRAND": "/",
-    "GET_BRAND": "/",
+    "GET_BRAND": "/get-all",
     //Admin
     "ADMIN_PAGE": "/admin",
 }

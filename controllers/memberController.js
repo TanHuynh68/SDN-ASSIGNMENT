@@ -1,6 +1,6 @@
 const showValiDateResult = require("../middleware/showValidateResult");
 const members = require("../models/member.model"); // Không cần destructuring { member }
-const { getMembersService, getMemberDetailService, changePasswordService, banOrUnBandMemberService } = require("../services/member.service");
+const { getMembersService, getMemberDetailService, changePasswordService, banOrUnBandMemberService, editMemberService } = require("../services/member.service");
 const bcrypt = require('bcrypt');
 class memberController {
     getAllMembers = async (req, res) => {
@@ -104,6 +104,31 @@ class memberController {
             if (response) {
                 res.status(200).json({
                     message: "Restore Successfully",
+                    data: response
+                });
+            } else {
+                return res.status(404).json({
+                    message: "User not found or id is not exsist!",
+                });
+            }
+        } catch (error) {
+            return res.status(500).json({
+                message: "An error occurred",
+            });
+        }
+    }
+
+    editMember = async (req, res) => {
+        try {
+            const validationErrors = showValiDateResult(req, res)
+            if (validationErrors) return;
+            const { id } = req.params
+            const { phoneNumber, name, YOB } = req.body;
+            const response = await editMemberService(req, res, id, phoneNumber, name, YOB);
+            console.log("response: ", response)
+            if (response) {
+                res.status(200).json({
+                    message: "Edit Member Successfully!",
                     data: response
                 });
             } else {

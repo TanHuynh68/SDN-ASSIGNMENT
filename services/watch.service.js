@@ -2,15 +2,22 @@ const watchModel = require("../models/watch.model");
 
 class watchService {
 
-    getWatchesService = async (req, res) => {
+    getWatchesService = async (req, res, keyword) => {
         try {
-            const response = await watchModel.find({}).populate('brand');
-            return response
+            let response;
+            if (!keyword) {
+                response = await watchModel.find({});
+            } else {
+                const regex = new RegExp(keyword, 'i');
+                response = await watchModel.find({ watchName: { $regex: regex } });
+            }
+            return response;
         } catch (error) {
             console.error(error);
             res.status(500).send("An error occurred");
         }
     }
+
 
     createWatchService = async (req, res, watchName, image, price, Automatic, watchDescription, brand) => {
         try {
@@ -21,31 +28,47 @@ class watchService {
             return response
         } catch (error) {
             console.error(error);
-            res.status(500).send("An error occurred");
         }
     }
 
-    getWatchService = async (req, res, watchName) => {
+    getWatchByNameService = async (req, res, watchName) => {
         try {
             const response = await watchModel.findOne({ watchName: watchName });
             return response
         } catch (error) {
             console.error(error);
-            res.status(500).send("An error occurred");
         }
     }
 
-    editWatchSerVice = async (req, res, _id, watchName, image, price, Automatic, watchDescription, brand) => {
+    getWatchByIdService = async (req, res, id) => {
         try {
-            const response = await watchModel.findOneAndUpdate({_id}, {
-                watchName: watchName, image: image, price: price, Automatic: Automatic,
-                watchDescription: watchDescription, brand: brand
-            }, { new: true });
-            console.log("editWatchSerVice: ", response)
+            const response = await watchModel.findById({ _id: id });
             return response
         } catch (error) {
             console.error(error);
-            res.status(500).send("An error occurred");
+        }
+    }
+
+    editWatchSerVice = async (req, res, id, watchName, image, price, Automatic, watchDescription, brand) => {
+        try {
+            const response = await watchModel.findOneAndUpdate({ _id: id }, {
+                watchName: watchName, image: image, price: price, Automatic: Automatic,
+                watchDescription: watchDescription, brand: brand
+            }, { new: true });
+            return response
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    deleteOrResotreService = async (req, res, id, is_delete) => {
+        try {
+            const response = await watchModel.findByIdAndUpdate(id, { $set: { is_delete: is_delete } }, { new: true })
+            console.log("deleteOrResotreService: ", response)
+            if (response)
+                return response;
+        } catch (error) {
+            console.log("error: ", error)
         }
     }
 }

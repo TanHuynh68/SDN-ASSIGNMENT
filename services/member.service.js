@@ -7,15 +7,20 @@ class memberService {
             if (!keyword) {  // Nếu keyword là rỗng hoặc không được cung cấp
                 response = await memberModel.find({});
             } else {
-                // Tìm các memberName chứa keyword bằng Regular Expression
+                // Tìm các memberName hoặc name chứa keyword bằng Regular Expression
                 const regex = new RegExp(keyword, 'i'); // 'i' cho phép tìm kiếm không phân biệt chữ hoa/thường
-                response = await memberModel.find({ memberName: { $regex: regex } });
+                response = await memberModel.find({
+                    $or: [
+                        { memberName: { $regex: regex } }, // Tìm trong memberName
+                        { name: { $regex: regex } }        // Tìm trong name
+                    ]
+                });
             }
             return response;
         } catch (error) {
             console.error(error);
-            res.status(500).send("An error occurred");
         }
+        
     }
 
     getMemberDetailService = async (req, res, id) => {
@@ -30,7 +35,7 @@ class memberService {
 
     changePasswordService = async (req, res, id, hashedPassword) => {
         try {
-            const response = await memberModel.findByIdAndUpdate(id, { $set: { password: hashedPassword }})
+            const response = await memberModel.findByIdAndUpdate(id, { $set: { password: hashedPassword } }, { new: true })
             console.log("changePasswordService: ", response)
             if (response)
                 return response;
@@ -41,7 +46,18 @@ class memberService {
 
     banOrUnBandMemberService = async (req, res, id, is_delete) => {
         try {
-            const response = await memberModel.findByIdAndUpdate(id, { $set: { is_delete: is_delete }})
+            const response = await memberModel.findByIdAndUpdate(id, { $set: { is_delete: is_delete } }, { new: true })
+            if (response)
+                return response;
+        } catch (error) {
+            console.log("error: ", error)
+        }
+    }
+
+    editMemberService = async (req, res, id, phoneNumber, name, YOB) => {
+        try {
+            const response = await memberModel.findByIdAndUpdate(
+                id, { $set: { phoneNumber: phoneNumber, name: name, YOB: YOB } }, { new: true })
             if (response)
                 return response;
         } catch (error) {

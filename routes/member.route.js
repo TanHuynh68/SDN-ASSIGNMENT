@@ -9,5 +9,6 @@ router.route(API_ROUTE.GET_MEMBER_DETAIL).get(memberMiddleware.validateIdFromPar
 router.route(API_ROUTE.CHANGE_PASSWORD).put(memberMiddleware.changePassword, memberController.changePassword)
 router.route(API_ROUTE.DELETE_MEMBER).put(memberMiddleware.banOrUnBanMember, memberController.deleteMember)
 router.route(API_ROUTE.RESTORE_MEMBER).put(memberMiddleware.banOrUnBanMember, memberController.restoreMember)
+router.route(API_ROUTE.EDIT_MEMBER).put(memberMiddleware.editMember, memberController.editMember)
 
 module.exports = router;
