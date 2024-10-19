@@ -17,6 +17,9 @@ const API_ROUTE = {
     "GET_ALL_BRANDS": "/get-all",
     "CREATE_BRAND": "/",
     "GET_BRAND": "/:id",
+    "EDIT_BRAND": "/:id",
+    "DELETE_BRAND": "/delete/:id",
+    "RESTORE_BRAND": "/restore/:id",
 }
 
 module.exports = API_ROUTE;

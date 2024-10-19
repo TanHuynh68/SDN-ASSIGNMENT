@@ -7,5 +7,5 @@ var router = express.Router();
 router.route(API_ROUTE.CREATE_BRAND).post(brandController.createBrand)
 router.route(API_ROUTE.GET_ALL_BRANDS).post(brandController.getAllBrand)
 router.route(API_ROUTE.GET_BRAND).get(brandController.getBrand)
-
+router.route(API_ROUTE.EDIT_BRAND).put(brandController.editBrand)
 module.exports = router;

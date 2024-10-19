@@ -5,7 +5,7 @@ class brandService {
     getBrandsService = async (req, res, keyword) => {
         try {
             let response;
-            if (!keyword) { 
+            if (!keyword) {
                 response = await brandModel.find({});
             } else {
                 const regex = new RegExp(keyword, 'i');
@@ -28,16 +28,28 @@ class brandService {
 
     getBrandService = async (req, res, brandName) => {
         try {
-            const response = await brandModel.findOne({ brandName: brandName });
-            return response
+            const response = await brandModel.findOne({ brandName: { $regex: new RegExp(`^${brandName}$`, 'i') } });
+            return response;
         } catch (error) {
             console.error(error);
+            return null; 
         }
     }
+    
 
     getBrandByIdService = async (req, res, id) => {
         try {
             const response = await brandModel.findById({ _id: id });
+            return response ? response : null
+        } catch (error) {
+            console.error(error);
+            return null
+        }
+    }
+
+    editBrandService = async (req, res, id, brandName) => {
+        try {
+            const response = await brandModel.findByIdAndUpdate({ _id: id }, { brandName: brandName }, { new: true });
             return response
         } catch (error) {
             console.error(error);
