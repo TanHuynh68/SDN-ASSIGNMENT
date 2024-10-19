@@ -1,5 +1,4 @@
 var express = require('express');
-const { checkToken } = require('../middleware/jwt.middleware');
 const watchController = require('../controllers/watchController');
 const { PATH } = require('../const');
 const pageController = require('../controllers/pageController');
@@ -10,7 +9,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/login',checkToken, function(req, res, next) {
+router.get('/login', function(req, res, next) {
   res.render('login', { title: 'Login Page' });
 });
 

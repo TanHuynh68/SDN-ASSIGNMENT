@@ -55,6 +55,17 @@ class brandService {
             console.error(error);
         }
     }
+
+    deleteOrResotreService = async (req, res, id, is_delete) => {
+        try {
+            const response = await watchModel.findByIdAndUpdate(id, { $set: { is_delete: is_delete } }, { new: true })
+            console.log("deleteOrResotreService: ", response)
+            if (response)
+                return response;
+        } catch (error) {
+            console.log("error: ", error)
+        }
+    }
 }
 
 module.exports = new brandService();

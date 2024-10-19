@@ -6,15 +6,14 @@ class watchService {
         try {
             let response;
             if (!keyword) {
-                response = await watchModel.find({});
+                response = await watchModel.find({}).populate('brand');
             } else {
                 const regex = new RegExp(keyword, 'i');
-                response = await watchModel.find({ watchName: { $regex: regex } });
+                response = await watchModel.find({ watchName: { $regex: regex } }).populate('brand');
             }
             return response;
         } catch (error) {
             console.error(error);
-            res.status(500).send("An error occurred");
         }
     }
 

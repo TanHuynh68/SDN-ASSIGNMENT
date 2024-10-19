@@ -6,6 +6,11 @@ const MESSAGE = {
     "EDIT_BRANDNAME_SUCCESSFULLY": "Edit brandName successfully",
     "EDIT_BRANDNAME_FAILED": "Edit failed - brandName is exsisted!",
     "BRAND_OR_ID_IS_NOT_EXSISTED": "Brand or Id is not existed!",
+    //watch
+    "WATCH_NOT_FOUND": "Watch or id is not exsisted",
+    "ADD_COMMENT_SUCCESSFULLY": "Add comment successfully!",
+    //member
+    "MEMBER_NOT_FOUND": "Member or id is not exsisted",
 }
 
 module.exports = MESSAGE;

@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 commentSchema = new Schema({
     rating: { type: Number, min: 1, max: 3, require: true },
     content: { type: String, require: true },
-    author: { type: mongoose.Schema.Types.ObjectId, ref: "member", require: true }
+    author: { type: mongoose.Schema.Types.ObjectId, ref: "member", require: true },
+    is_delete: { type: Boolean, require: true, default: false },
 }, { timestamps: true }
 )
 

@@ -52,7 +52,7 @@ class authController {
                     const token = jwt.sign(
                         { id: member._id, name: member.name, isAdmin: member.isAdmin },
                         SECRET_KEY,
-                        { expiresIn: EXPIRES_IN }
+                        { expiresIn: parseInt(EXPIRES_IN) }
                     );
                     res.cookie('token', token, { httpOnly: true, secure: true });
                     return res.status(200).json({
@@ -72,6 +72,7 @@ class authController {
             res.status(500).json({ message: "An error occurred" });
         }
     }
+
     logout = (req, res) => {
         const cookies = req.cookies;
         console.log("handle logout")

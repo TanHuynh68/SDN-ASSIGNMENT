@@ -1,6 +1,6 @@
 const { MESSAGE } = require("../const");
 const brandModel = require("../models/brand.model");
-const { createBrandService, getBrandService, getBrandsService, getBrandByIdService, editBrandService } = require("../services/brand.services");
+const { createBrandService, getBrandService, getBrandsService, getBrandByIdService, editBrandService, deleteOrResotreService } = require("../services/brand.services");
 
 class brandController {
     getAllBrand = async (req, res) => {
@@ -103,6 +103,47 @@ class brandController {
         }
     };
     
+    deleteBrand= async (req, res) => {
+        try {
+            const { id } = req.params
+            const response = await deleteOrResotreService(req, res, id, true);
+            if (response) {
+                res.status(200).json({
+                    message: "Delete Watch Successfully",
+                    data: response
+                });
+            } else {
+                return res.status(404).json({
+                    message: "User not found or id is not exsist!",
+                });
+            }
+        } catch (error) {
+            return res.status(500).json({
+                message: "An error occurred",
+            });
+        }
+    }
+
+    restoreBrand = async (req, res) => {
+        try {
+            const { id } = req.params
+            const response = await deleteOrResotreService(req, res, id, false);
+            if (response) {
+                res.status(200).json({
+                    message: "Delete Watch Successfully",
+                    data: response
+                });
+            } else {
+                return res.status(404).json({
+                    message: "User not found or id is not exsist!",
+                });
+            }
+        } catch (error) {
+            return res.status(500).json({
+                message: "An error occurred",
+            });
+        }
+    }
 }
 
 module.exports = new brandController();

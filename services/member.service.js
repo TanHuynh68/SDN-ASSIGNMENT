@@ -64,6 +64,17 @@ class memberService {
             console.log("error: ", error)
         }
     }
+
+    commentWatch = async (req, res, rating, comment, author, watch) => {
+        try {
+            const response = await memberModel.findByIdAndUpdate(
+                id, { $set: { phoneNumber: phoneNumber, name: name, YOB: YOB } }, { new: true })
+            if (response)
+                return response;
+        } catch (error) {
+            console.log("error: ", error)
+        }
+    }
 }
 
 module.exports = new memberService();

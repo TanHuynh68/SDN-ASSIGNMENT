@@ -6,6 +6,7 @@ const API_ROUTE = {
     "DELETE_MEMBER": "/delete/:id",
     "RESTORE_MEMBER": "/restore/:id",
     "EDIT_MEMBER": "/edit/:id",
+    "COMMENT_WATCH": "/comment/:id",
     //watch
     "GET_ALL_WATCH": "/get-all",
     "CREATE_WATCH": "/",

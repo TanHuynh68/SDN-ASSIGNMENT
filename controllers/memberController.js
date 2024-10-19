@@ -2,12 +2,14 @@ const showValiDateResult = require("../middleware/showValidateResult");
 const members = require("../models/member.model"); // Không cần destructuring { member }
 const { getMembersService, getMemberDetailService, changePasswordService, banOrUnBandMemberService, editMemberService } = require("../services/member.service");
 const bcrypt = require('bcrypt');
+const { getWatchByIdService } = require("../services/watch.service");
+const MESSAGE = require("../const/message");
+const { commentWatchService } = require("../services/comment.service");
 class memberController {
     getAllMembers = async (req, res) => {
         try {
             const { keyword } = req.body
             const response = await getMembersService(req, res, keyword);
-            console.log("response: ", response)
             if (response) {
                 res.status(200).json({
                     message: "Get Members Successfully!",
@@ -125,7 +127,6 @@ class memberController {
             const { id } = req.params
             const { phoneNumber, name, YOB } = req.body;
             const response = await editMemberService(req, res, id, phoneNumber, name, YOB);
-            console.log("response: ", response)
             if (response) {
                 res.status(200).json({
                     message: "Edit Member Successfully!",
@@ -142,6 +143,37 @@ class memberController {
             });
         }
     }
+
+    commentWatch = async (req, res) => {
+        try {
+            const validationErrors = showValiDateResult(req, res)
+            if (validationErrors) return;
+            const { id } = req.params
+            const { rating, content, author } = req.body;
+            const response = await getWatchByIdService(req, res, id);
+            if (!response) {
+                return res.status(404).json({
+                    message: MESSAGE.WATCH_NOT_FOUND,
+                });
+            }
+            const member = await getMemberDetailService(req, res, author);
+            if (!member) {
+                return res.status(404).json({
+                    message: MESSAGE.MEMBER_NOT_FOUND,
+                });
+            }
+            const comment = await commentWatchService(req, res, response, rating, member, content)
+            return res.status(201).json({
+                message: MESSAGE.ADD_COMMENT_SUCCESSFULLY,
+                data: comment
+            });
+        } catch (error) {
+            return res.status(500).json({
+                message: MESSAGE.INTERNAL_SERVER_ERROR,
+            });
+        }
+    }
+
 }
 
 module.exports = new memberController();
