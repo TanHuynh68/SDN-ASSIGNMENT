@@ -6,9 +6,12 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@infobip-api/sdk": "^0.3.2",
+    "@vonage/server-sdk": "^3.19.0",
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
     "cookie-parser": "~1.4.4",
+    "crypto": "^1.0.1",
     "debug": "~2.6.9",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
@@ -22,8 +25,10 @@
     "mongoose": "^8.7.1",
     "morgan": "~1.9.1",
     "nodemon": "^3.1.7",
+    "redis": "^4.7.0",
     "sdn-assignment": "file:",
-    "sequelize": "^6.37.4"
+    "sequelize": "^6.37.4",
+    "twilio": "^5.3.4"
   },
   "devDependencies": {
     "sequelize-cli": "^6.6.2"

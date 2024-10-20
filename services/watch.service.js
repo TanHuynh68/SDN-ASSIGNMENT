@@ -17,6 +17,20 @@ class watchService {
         }
     }
 
+    getWatchesByClientService = async (req, res, keyword) => {
+        try {
+            let response;
+            if (!keyword) {
+                response = await watchModel.find({is_delete: false}).populate('brand');
+            } else {
+                const regex = new RegExp(keyword, 'i');
+                response = await watchModel.find({ watchName: { $regex: regex }, is_delete: false }).populate('brand');
+            }
+            return response;
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     createWatchService = async (req, res, watchName, image, price, Automatic, watchDescription, brand) => {
         try {

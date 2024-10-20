@@ -5,7 +5,7 @@ const { API_ROUTE } = require('../const');
 const jwtMiddleware = require('../middleware/jwt.middleware');
 var router = express.Router();
 
-router.route(API_ROUTE.GET_ALL_MEMBER).post( memberController.getAllMembers)
+router.route(API_ROUTE.GET_ALL_MEMBER).post(jwtMiddleware.authenticateToken,jwtMiddleware.isAdmin, memberController.getAllMembers)
 router.route(API_ROUTE.GET_MEMBER_DETAIL).get(memberMiddleware.validateIdFromParam, memberController.getMemberDetail)
 router.route(API_ROUTE.CHANGE_PASSWORD).put(memberMiddleware.changePassword, memberController.changePassword)
 router.route(API_ROUTE.DELETE_MEMBER).put(jwtMiddleware.authenticateToken,jwtMiddleware.isAdmin,memberMiddleware.banOrUnBanMember, memberController.deleteMember)

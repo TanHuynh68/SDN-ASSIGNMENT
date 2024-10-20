@@ -9,6 +9,7 @@ const API_ROUTE = {
     "COMMENT_WATCH": "/comment/:id",
     //watch
     "GET_ALL_WATCH": "/get-all",
+    "GET_ALL_WATCH_BY_CLIENT": "/client/get-all",
     "CREATE_WATCH": "/",
     "GET_WATCH": "/:id",
     "EDIT_WATCH": "/:id",

@@ -8,6 +8,8 @@ const MESSAGE = {
     "BRAND_OR_ID_IS_NOT_EXSISTED": "Brand or Id is not existed!",
     //watch
     "WATCH_NOT_FOUND": "Watch or id is not exsisted",
+    "DELETE_SUCCESSFULLY": "Delete watch successfully",
+    "RESTORE_SUCCESSFULLY": "Restore watch successfully",
     "ADD_COMMENT_SUCCESSFULLY": "Add comment successfully!",
     //member
     "MEMBER_NOT_FOUND": "Member or id is not exsisted",

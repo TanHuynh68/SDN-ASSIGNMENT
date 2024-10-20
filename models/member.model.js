@@ -7,6 +7,7 @@ const memberSchema = new Schema({
     YOB: { type: String, require: true },
     name: { type: String, require: true },
     is_delete: { type: Boolean, require: true, default: false },
+    is_verified: { type: Boolean, require: true, default: false },
     phoneNumber: { type: String, require: true },
 },
     { timestamps: true, });

@@ -34,7 +34,7 @@ class jwtMiddleWare {
     };
 
     isAdmin = (req, res, next) => {
-        const { isAdmin } = req.user.isAdmin
+        const isAdmin = req.user.isAdmin
         if (isAdmin === false) {
             return res.status(403).json({
                 message: 'You are not Admin.'
@@ -45,7 +45,7 @@ class jwtMiddleWare {
     };
 
     isMember = (req, res, next) => {
-        const { isAdmin } = req.user.isAdmin
+        const isAdmin= req.user.isAdmin
         if (isAdmin === true) {
             return res.status(403).json({
                 message: 'You are not Member.'

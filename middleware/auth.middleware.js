@@ -10,6 +10,7 @@ class authMiddleWare {
             .matches(/^\d+$/) // Đảm bảo chỉ chứa số
             .withMessage('password must only contain digits.'),
         body('name').notEmpty().withMessage('name is required!'),
+        body('phoneNumber').notEmpty().withMessage('phoneNumber is required!'),
     ];
 
     loginValidate = [

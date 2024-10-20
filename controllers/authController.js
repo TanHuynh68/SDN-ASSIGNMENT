@@ -3,16 +3,26 @@ const members = require("../models/member.model");
 require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
+const redis = require('redis');
 const showValiDateResult = require("../middleware/showValidateResult");
 const { getMemberService } = require("../services/auth.service");
-
+const { generateOTP, sendOTP } = require("../services/sms.service");
+const client = redis.createClient();
 const SECRET_KEY = process.env.SECRET_KEY;
 const EXPIRES_IN = process.env.EXPIRES_IN;
+
+client.connect()
+  .then(() => console.log('Connected to Redis'))
+  .catch(err => console.error('Redis connection error:', err));
+
+// Đảm bảo client không bị đóng trước khi sử dụng
+client.on('error', (err) => console.error('Redis Client Error', err));
 class authController {
+
     register = async (req, res) => {
         const validationErrors = showValiDateResult(req, res)
         if (validationErrors) return;
-        const { memberName, password, name } = req.body;
+        const { memberName, password, name, phoneNumber } = req.body;
         try {
             const isExsistMember = await getMemberService(req, res, memberName)
             if (isExsistMember.length > 0) {
@@ -25,10 +35,16 @@ class authController {
             const response = await members.create({ memberName: memberName, password: hashedPassword, name: name });
             console.log("response: ", response)
             if (response) {
-                console.log("Create Successfully!");
+                const otp = generateOTP();
+                console.log("otp: ", otp);
+                client.set(phoneNumber, otp, 'EX', 120);
+               const sendotp =  await sendOTP(phoneNumber, otp);
+               console.log("sendotp: ", sendotp);
                 res.status(201).json({
                     message: "Create Account Successfully!",
-                    data: response
+                    data: response,
+                    otp: otp,
+                    sendOTP: sendotp
                 });
             } else {
                 console.log("Create Failed!");
@@ -39,6 +55,8 @@ class authController {
             res.status(500).send("An error occurred");
         }
     }
+
+
 
     login = async (req, res) => {
         const { memberName, password } = req.body;

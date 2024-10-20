@@ -1,6 +1,8 @@
+const { MESSAGE } = require("../const");
 const showValiDateResult = require("../middleware/showValidateResult");
 const { getWatchesService, createWatchService, editWatchSerVice, deleteOrResotreService, getWatchByNameService,
-    getWatchByIdService } = require("../services/watch.service");
+    getWatchByIdService, 
+    getWatchesByClientService} = require("../services/watch.service");
 const { validationResult } = require('express-validator');
 
 
@@ -13,7 +15,28 @@ class brandController {
             if (response) {
                 return res.status(200).json({
                     message: "Get Watches Successfully!",
+                    dataCount: response.length,
                     data: response
+                })
+            }
+        } catch (error) {
+            console.log("getWatches-error: ", error)
+            return res.status(500).json({
+                message: "Internal Server Error",
+            })
+        }
+    }
+
+    getWatchesByClient = async (req, res) => {
+        const {keyword} = req.body
+        try {
+            const response = await getWatchesByClientService(req, res, keyword)
+            console.log("lenth: ", response.length)
+            if (response) {
+                return res.status(200).json({
+                    message: "Get Watches Successfully!",
+                    dataCount: response.length,
+                    data: response             
                 })
             }
         } catch (error) {
@@ -111,20 +134,19 @@ class brandController {
         try {
             const { id } = req.params
             const response = await deleteOrResotreService(req, res, id, true);
-            console.log("response: ", response)
             if (response) {
                 res.status(200).json({
-                    message: "Delete Watch Successfully",
+                    message:  MESSAGE.DELETE_SUCCESSFULLY,
                     data: response
                 });
             } else {
                 return res.status(404).json({
-                    message: "User not found or id is not exsist!",
+                    message: MESSAGE.WATCH_NOT_FOUND,
                 });
             }
         } catch (error) {
             return res.status(500).json({
-                message: "An error occurred",
+                message: MESSAGE.WATCH_NOT_FOUND,
             });
         }
     }
@@ -133,20 +155,19 @@ class brandController {
         try {
             const { id } = req.params
             const response = await deleteOrResotreService(req, res, id, false);
-            console.log("response: ", response)
             if (response) {
                 res.status(200).json({
-                    message: "Delete Watch Successfully",
+                    message: MESSAGE.RESTORE_SUCCESSFULLY,
                     data: response
                 });
             } else {
                 return res.status(404).json({
-                    message: "User not found or id is not exsist!",
+                    message: MESSAGE.WATCH_NOT_FOUND,
                 });
             }
         } catch (error) {
             return res.status(500).json({
-                message: "An error occurred",
+                message: MESSAGE.INTERNAL_SERVER_ERROR,
             });
         }
     }
