@@ -10,7 +10,7 @@ var brandRouter = require('./routes/brand.route');
 var watchRouter = require('./routes/watch.route');
 var authRouter = require('./routes/auth');
 var pathRoute = require('./routes/page.route');
-var cookieParser = require('cookie-parser');
+
 var app = express();
 
 // view engine setup
@@ -28,7 +28,7 @@ app.use('/api/members', memberRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/brands', brandRouter);
 app.use('/api/watches', watchRouter);
-app.use('/page/', pathRoute);
+app.use('/', pathRoute);
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const connectDB = require('./config/connectDB');
 // connect db

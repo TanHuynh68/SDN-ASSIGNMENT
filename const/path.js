@@ -1,5 +1,6 @@
 const PATH = {
-    "LOGIN": "/login",
+    "LOGIN_PAGE": "/login",
+    "HOME_PAGE": "/",
     "REGISTER": "/register",
     "LOGOUT": "/logout",
     //brand
@@ -7,6 +8,8 @@ const PATH = {
     "GET_BRAND": "/get-all",
     //Admin
     "ADMIN_PAGE": "/admin",
+    //watch
+    "CLIENT_WATCH_DETAIL": "/watch/:id",
 }
 
 module.exports = PATH;

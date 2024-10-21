@@ -150,6 +150,7 @@ class memberController {
             if (validationErrors) return;
             const { id } = req.params
             const { rating, content, author } = req.body;
+            console.log("rating",rating);
             const response = await getWatchByIdService(req, res, id);
             if (!response) {
                 return res.status(404).json({
@@ -162,11 +163,13 @@ class memberController {
                     message: MESSAGE.MEMBER_NOT_FOUND,
                 });
             }
-            const comment = await commentWatchService(req, res, response, rating, member, content)
-            return res.status(201).json({
-                message: MESSAGE.ADD_COMMENT_SUCCESSFULLY,
-                data: comment
-            });
+            const comment = await commentWatchService(req, res, response, rating, author, content)
+            console.log("comment",comment);
+            // return res.status(201).json({
+            //     message: MESSAGE.ADD_COMMENT_SUCCESSFULLY,
+            //     data: comment
+            // });
+            return res.redirect(`/watch/${id}`)
         } catch (error) {
             return res.status(500).json({
                 message: MESSAGE.INTERNAL_SERVER_ERROR,

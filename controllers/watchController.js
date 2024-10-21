@@ -4,6 +4,7 @@ const { getWatchesService, createWatchService, editWatchSerVice, deleteOrResotre
     getWatchByIdService, 
     getWatchesByClientService} = require("../services/watch.service");
 const { validationResult } = require('express-validator');
+const { getHomePage } = require("./pageController");
 
 
 class brandController {
@@ -18,6 +19,7 @@ class brandController {
                     dataCount: response.length,
                     data: response
                 })
+               
             }
         } catch (error) {
             console.log("getWatches-error: ", error)
@@ -30,7 +32,7 @@ class brandController {
     getWatchesByClient = async (req, res) => {
         const {keyword} = req.body
         try {
-            const response = await getWatchesByClientService(req, res, keyword)
+            const response = await getWatchesByClientService(req, res, keyword||"")
             console.log("lenth: ", response.length)
             if (response) {
                 return res.status(200).json({
@@ -38,6 +40,7 @@ class brandController {
                     dataCount: response.length,
                     data: response             
                 })
+                // return getHomePage(req,res)
             }
         } catch (error) {
             console.log("getWatches-error: ", error)
@@ -92,10 +95,11 @@ class brandController {
             }
             const response = await createWatchService(req, res, watchName, image, price, Automatic, watchDescription, brand)
             if (response) {
-                return res.status(201).json({
-                    message: "Create New Watch Successfully",
-                    data: response
-                })
+                // return res.status(201).json({
+                //     message: "Create New Watch Successfully",
+                //     data: response
+                // })
+                return res.redirect("/admin")
             }
         } catch (error) {
             console.log("createWatch-error: ", error)
@@ -110,13 +114,17 @@ class brandController {
             const validationErrors = showValiDateResult(req, res)
             if (validationErrors) return;
             const { id } = req.params
+            console.log("id: ", id)
             const { watchName, image, price, Automatic, watchDescription, brand } = req.body;
+            console.log(watchName, image, price, Automatic, watchDescription, brand)
             const response = await editWatchSerVice(req, res, id, watchName, image, price, Automatic, watchDescription, brand)
+            console.log("editWatch: ", response)
             if (response) {
-                return res.status(200).json({
-                    message: "Edit Watch Successfully",
-                    data: response
-                })
+                // return res.status(200).json({
+                //     message: "Edit Watch Successfully",
+                //     data: response
+                // })
+                return res.redirect("/admin")
             } else if (response === undefined || response === null) {
                 return res.status(404).json({
                     message: "Watch not found or id is not exsist!",
@@ -135,10 +143,11 @@ class brandController {
             const { id } = req.params
             const response = await deleteOrResotreService(req, res, id, true);
             if (response) {
-                res.status(200).json({
-                    message:  MESSAGE.DELETE_SUCCESSFULLY,
-                    data: response
-                });
+                // res.status(200).json({
+                //     message:  MESSAGE.DELETE_SUCCESSFULLY,
+                //     data: response
+                // });
+                return res.redirect("/admin")
             } else {
                 return res.status(404).json({
                     message: MESSAGE.WATCH_NOT_FOUND,
@@ -156,10 +165,11 @@ class brandController {
             const { id } = req.params
             const response = await deleteOrResotreService(req, res, id, false);
             if (response) {
-                res.status(200).json({
-                    message: MESSAGE.RESTORE_SUCCESSFULLY,
-                    data: response
-                });
+                // res.status(200).json({
+                //     message: MESSAGE.RESTORE_SUCCESSFULLY,
+                //     data: response
+                // });
+                return res.redirect("/admin")
             } else {
                 return res.status(404).json({
                     message: MESSAGE.WATCH_NOT_FOUND,

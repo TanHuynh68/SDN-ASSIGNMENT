@@ -6,10 +6,14 @@ class watchService {
         try {
             let response;
             if (!keyword) {
-                response = await watchModel.find({}).populate('brand');
+                response = await watchModel.find({}).populate('brand').populate({
+                    path: 'comments.author', // Population của author trong comments
+                  });;
             } else {
                 const regex = new RegExp(keyword, 'i');
-                response = await watchModel.find({ watchName: { $regex: regex } }).populate('brand');
+                response = await watchModel.find({ watchName: { $regex: regex } }).populate('brand').populate({
+                    path: 'comments.author', // Population của author trong comments
+                  });;
             }
             return response;
         } catch (error) {
@@ -55,7 +59,10 @@ class watchService {
 
     getWatchByIdService = async (req, res, id) => {
         try {
-            const response = await watchModel.findById({ _id: id });
+            const response = await watchModel.findById({ _id: id }).populate('brand').populate({
+                path: 'comments.author', // Population của author trong comments
+              });
+              console.log("getWatchByIdService :", response)
             return response
         } catch (error) {
             console.error(error);

@@ -6,14 +6,15 @@ const bcrypt = require('bcrypt');
 const redis = require('redis');
 const showValiDateResult = require("../middleware/showValidateResult");
 const { getMemberService } = require("../services/auth.service");
-const { generateOTP, sendOTP } = require("../services/sms.service");
+const { generateOTP, sendSMS } = require("../services/sms.service");
+const { PATH } = require("../const");
 const client = redis.createClient();
 const SECRET_KEY = process.env.SECRET_KEY;
 const EXPIRES_IN = process.env.EXPIRES_IN;
 
 client.connect()
-  .then(() => console.log('Connected to Redis'))
-  .catch(err => console.error('Redis connection error:', err));
+    .then(() => console.log('Connected to Redis'))
+    .catch(err => console.error('Redis connection error:', err));
 
 // Đảm bảo client không bị đóng trước khi sử dụng
 client.on('error', (err) => console.error('Redis Client Error', err));
@@ -35,17 +36,15 @@ class authController {
             const response = await members.create({ memberName: memberName, password: hashedPassword, name: name });
             console.log("response: ", response)
             if (response) {
-                const otp = generateOTP();
-                console.log("otp: ", otp);
-                client.set(phoneNumber, otp, 'EX', 120);
-               const sendotp =  await sendOTP(phoneNumber, otp);
-               console.log("sendotp: ", sendotp);
-                res.status(201).json({
-                    message: "Create Account Successfully!",
-                    data: response,
-                    otp: otp,
-                    sendOTP: sendotp
-                });
+                const sendotp =  sendSMS(phoneNumber);
+                console.log("sendotp: ", sendotp);
+                // res.status(201).json({
+                //     message: "Create Account Successfully!",
+                //     data: response,
+                //     otp: otp,
+                //     sendOTP: sendotp
+                // });
+                return res.redirect("/login")
             } else {
                 console.log("Create Failed!");
                 res.status(500).send("Internal Server Error");
@@ -72,12 +71,22 @@ class authController {
                         SECRET_KEY,
                         { expiresIn: parseInt(EXPIRES_IN) }
                     );
-                    res.cookie('token', token, { httpOnly: true, secure: true });
-                    return res.status(200).json({
-                        message: "Login Successfully!",
-                        token: token,
-                    });
-                    // res.redirect(`/admin`);
+                    const dataUser = member._id
+                    const accessTokem = `${token}`
+                    res.cookie('token', accessTokem, { httpOnly: true, secure: true });
+                    res.cookie('dataUser', dataUser, { httpOnly: true, secure: true });
+                    res.setHeader('Authorization', `Bearer ${token}`);
+                    // return res.status(200).json({
+                    //     message: "Login Successfully!",
+                    //     token: token,
+                    // });
+                    console.log("member: ", member)
+                    if (member.isAdmin === true) {
+                        return res.redirect(PATH.ADMIN_PAGE); // Chuyển hướng đến trang quản trị
+                    } else {
+                        return res.redirect(PATH.HOME_PAGE); // Chuyển hướng đến trang chính
+                    }
+    
                 } else {
                     console.log("Login Failed: Invalid password");
                     res.status(401).json({ message: "Password Invalid" });

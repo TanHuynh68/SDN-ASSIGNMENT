@@ -54,13 +54,15 @@ class brandController {
                 message: "Brand Existed",
                 data: responseFindOneBrand
             })
+            
         }
         const response = await createBrandService(req, res, brandName)
         if (response) {
-            return res.status(201).json({
-                message: "Create New Brand Successfully",
-                data: response
-            })
+            // return res.status(201).json({
+            //     message: "Create New Brand Successfully",
+            //     data: response
+            // })
+            return res.redirect("/admin/brand")
         }
     }
 
@@ -91,10 +93,11 @@ class brandController {
                 });
             }
             const edit = await editBrandService(req, res, id, brandName);
-            return res.status(200).json({
-                message: MESSAGE.EDIT_BRANDNAME_SUCCESSFULLY,
-                data: edit,
-            });
+            // return res.status(200).json({
+            //     message: MESSAGE.EDIT_BRANDNAME_SUCCESSFULLY,
+            //     data: edit,
+            // });
+            return res.redirect("/admin/brand")
         } catch (error) {
             console.error(error); 
             return res.status(500).json({
@@ -108,10 +111,11 @@ class brandController {
             const { id } = req.params
             const response = await deleteOrResotreService(req, res, id, true);
             if (response) {
-                res.status(200).json({
-                    message: "Delete Watch Successfully",
-                    data: response
-                });
+                // res.status(200).json({
+                //     message: "Delete Watch Successfully",
+                //     data: response
+                // });
+                return res.redirect("/admin/brand")
             } else {
                 return res.status(404).json({
                     message: "User not found or id is not exsist!",

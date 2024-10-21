@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.5.0/dist/css/coreui.min.css" rel="stylesheet"
+        integrity="sha384-r/2d1aBwRhQSqjQh/21GvBPd8Oq6JOk0rWn05ngWyhiPOL79wFjw7vcbn3HwYGC/" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Library</li>
+            </ol>
+        </nav>
+        <div class="row mt-5">
+            <div class="col-md-6 text-center ">
+                <img class="w-100" src="<%= data.image %>" alt="">
+            </div>
+            <div class="col-md-6">
+                <p class="fs-3 fw-bold mb-0">
+                    <%= data.brand.brandName %>
+                </p>
+                <p class="fs-5 fw-bold">
+                    <%= data.watchName %>
+                </p>
+                <p class="fs-3 text-danger">
+                    <%= data.price.toLocaleString('vi-VN')+" ₫" %>
+                </p>
+                <p class="fs-6">
+                    <%= data.watchDescription %>
+                </p>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                    <div class="card-body p-4">
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <form action="/api/members/comment/<%= data._id %>" method="POST">
+                                <input type="hidden" name="author" value=<%=dataUser %> id="author">
+                                <!-- <input type="hidden" name="rating" value="3" id="rating"> -->
+                                <select name="rating" class="form-select" aria-label="Default select example">
+                                    <option selected>Choose rating</option>
+                                    <option value="1">bad</option>
+                                    <option value="2">not bad</option>
+                                    <option value="3">good</option>
+                                </select>
+                                <input name="content" type="text" id="content" class="form-control"
+                                    placeholder="Type comment..." required />
+                                <button type="submit" class="btn btn-primary mt-2">+ Add comment</button>
+                            </form>
+
+                        </div>
+
+                        <% data.comments.forEach(function(comment) { %>
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <p>
+                                        <% if (comment.author) { %>
+                                            <p>
+                                                <%= comment.author.memberName %>
+                                                    <%= new Date(comment.createdAt).toLocaleDateString('vi-VN') %>
+                                                        <% if (comment.rating===1) { %>
+                                                            bad
+                                                            <% } else if (comment.rating===2) { %>
+                                                                not bad
+                                                                <% } else if (comment.rating===3) { %>
+                                                                    good
+                                                                    <% } %>
+                                            </p>
+                                            <% } else { %>
+                                                <p>Anonymous</p> <!-- Hoặc một thông báo khác nếu không có tác giả -->
+                                                <% } %>
+                                    </p>
+
+                                    <div class="d-flex justify-content-between">
+
+                                        <div class="d-flex flex-row align-items-center">
+                                            <img src="data:image/jpeg;base64,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"
+                                                alt="avatar" width="25" height="25" />
+                                            <p class="small mb-0 ms-2 ">
+                                                <%= comment.content %>
+                                            </p>
+
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center">
+                                            <p class="small text-muted mb-0">Upvote?</p>
+                                            <i class="far fa-thumbs-up mx-2 fa-xs text-body"
+                                                style="margin-top: -0.16rem;"></i>
+                                            <p class="small text-muted mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <footer class="bg-dark text-white text-center py-3 mt-3">
+        <div class="container">
+            <p class="mb-0">© 2024 Công ty Tân Triều. Tất cả các quyền được bảo lưu.</p>
+            <ul class="list-unstyled d-flex justify-content-center mb-0">
+                <li class="mx-3"><a href="#" class="text-white">Giới thiệu</a></li>
+                <li class="mx-3"><a href="#" class="text-white">Dịch vụ</a></li>
+                <li class="mx-3"><a href="#" class="text-white">Liên hệ</a></li>
+                <li class="mx-3"><a href="#" class="text-white">Chính sách bảo mật</a></li>
+            </ul>
+        </div>
+    </footer>
+    <script>
+        const watchId = button.getAttribute('data-watchid');
+        const watchName = button.getAttribute('data-watchname');
+        const image = button.getAttribute('data-image');
+        const price = button.getAttribute('data-price');
+        // Hàm xử lý sự kiện khi nhấn nút 'Add a note'
+        addCommentBtn.addEventListener('click', async function () {
+            const commentText = commentInput.value;
+            const authorId = authorInput.value;
+            const rating = ratingInput.value;
+
+            // Kiểm tra các trường có dữ liệu hợp lệ không
+            if (commentText.trim() && authorId.trim() && rating.trim()) {
+                try {
+                    // Gọi API với method POST
+                    const response = await fetch('http://localhost:5000/api/members/comment/6712cda7c4e7798f85fd8437', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            content: commentText,
+                            author: authorId,
+                            rating: rating
+                        }),
+                    });
+
+                    if (response.ok) {
+                        const newComment = await response.json();
+
+                        // Thêm comment mới vào danh sách
+                        const newCommentElement = document.createElement('li');
+                        newCommentElement.textContent = `Comment: ${newComment.content}, Rating: ${newComment.rating}`;
+                        commentList.appendChild(newCommentElement);
+
+                        // Reset input sau khi thêm comment thành công
+                        commentInput.value = '';
+                        authorInput.value = '';
+                        ratingInput.value = '';
+                    } else {
+                        alert('Failed to add comment. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again later.');
+                }
+            } else {
+                alert('Please fill in all fields!');
+            }
+        });
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.1.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-i+Yu7CmJG/p8FA6Avyg4ZheFvxNjJQ5taj5ArZf94yQt1lWZiVwkXyPrgE/QqbJi"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -51,18 +51,20 @@
         </div>
       </div>
     </nav>
-
-    <!-- Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="text-center mt-3"><button type="button" class="btn btn-success" data-bs-toggle="modal"
+        data-bs-target="#addModal">
+        Add New
+      </button></div>
+    <!-- Modal Add New -->
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="editModalLabel">Edit Watch</h1>
+            <h1 class="modal-title fs-5" id="addModalLabel">Add New Watch</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <!-- Form -->
-            <form action="/watch/" method="POST" id="editForm">
+            <form action="/api/watches" method="POST" id="addForm">
               <div class="mb-3">
                 <label for="inputWatchName" class="form-label">Watch Name</label>
                 <input type="text" class="form-control" id="inputWatchName" name="watchName" required>
@@ -74,6 +76,92 @@
               <div class="mb-3">
                 <label for="inputPrice" class="form-label">Price</label>
                 <input type="number" class="form-control" id="inputPrice" name="price" required>
+              </div>
+              <div class="mb-3">
+                <label for="inputBrand" class="form-label">Brand</label>
+                <select aria-label="Default select example" class="form-select" id="inputBrand" name="brand" required>
+                  <option value="" selected disabled>Select a brand</option>
+                  <% if (brands && brands.length> 0) { %>
+                    <% brands.forEach((brand)=> { %>
+                      <option value="<%= brand._id %>">
+                        <%= brand.brandName %>
+                      </option>
+                      <% }) %>
+                        <% } else { %>
+                          <option value="" disabled>No brands available</option>
+                          <% } %>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="inputWatchDescription" class="form-label">Watch Description</label>
+                <textarea class="form-control" id="inputWatchDescription" name="watchDescription" required></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="inputAutomatic" class="form-label">Automatic</label>
+                <select class="form-select" id="inputAutomatic" name="Automatic" required>
+                  <option value="" disabled selected>Select...</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add Watch</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="editModalLabel">Edit Watch</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Form -->
+            <form action="/api/watches/" method="POST" id="editForm">
+              <div class="mb-3">
+                <label for="inputWatchName" class="form-label">Watch Name</label>
+                <input type="text" class="form-control" id="inputWatchName" name="watchName" required>
+              </div>
+              <div class="mb-3">
+                <label for="inputImage" class="form-label">Image URL</label>
+                <input type="text" class="form-control" id="inputImage" name="image" required>
+              </div>
+              <div class="mb-3">
+                <label for="inputPrice" class="form-label">Price</label>
+                <input type="number" class="form-control" id="inputPrice" name="price" required>
+              </div>
+              <div class="mb-3">
+                <label for="inputBrand" class="form-label">Brand</label>
+                <select aria-label="Default select example" class="form-select" id="inputBrand" name="brand" required>
+                  <option value="" selected disabled>Select a brand</option>
+                  <% if (brands && brands.length> 0) { %>
+                    <% brands.forEach((brand)=> { %>
+                      <option value="<%= brand._id %>">
+                        <%= brand.brandName %>
+                      </option>
+                      <% }) %>
+                        <% } else { %>
+                          <option value="" disabled>No brands available</option>
+                          <% } %>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="inputWatchDescription" class="form-label">Watch Description</label>
+                <textarea class="form-control" id="inputWatchDescription" name="watchDescription" required></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="inputAutomatic" class="form-label">Automatic</label>
+                <select class="form-select" id="inputAutomatic" name="Automatic" required>
+                  <option value="" disabled selected>Select...</option>
+                  <option value=true>Yes</option>
+                  <option value=false>No</option>
+                </select>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -92,35 +180,56 @@
             <th scope="col">Name</th>
             <th scope="col">Image</th>
             <th scope="col">Brand</th>
+            <th scope="col">Status</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
-          <% if (data && data.length > 0) { %>
-            <% data.forEach((item) => { %>
+          <% if (data && data.length> 0) { %>
+            <% data.forEach((item)=> { %>
               <tr>
-                <td><%= item.watchName %></td>
+                <td class="w-50">
+                  <%= item.watchName %>
+                </td>
                 <td><img src="<%= item.image %>" alt="" width="50"></td>
-                <td><%= item.brand.brandName %></td>
                 <td>
-                  <button type="button" class="btn btn-primary edit-button" 
-                    data-bs-toggle="modal" data-bs-target="#editModal"
-                    data-watchid="<%= item._id %>"
-                    data-watchname="<%= item.watchName %>" 
-                    data-image="<%= item.image %>" 
-                    data-price="<%= item.price %>">
+                  <%= item.brand.brandName %>
+                </td>
+                <td>
+                  <%= item.is_delete===true ? "Inactive" : "active" %>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-primary edit-button" data-bs-toggle="modal"
+                    data-bs-target="#editModal" data-watchid="<%= item._id %>" data-watchname="<%= item.watchName %>"
+                    data-image="<%= item.image %>" data-price="<%= item.price %>"
+                    data-brand="<%= item.brand.brandName %>" data-description="<%= item.watchDescription %>"
+                    data-automatic="<%= item.automatic %>">
                     Edit
                   </button>
-      
-                  <button type="button" class="btn btn-danger">Delete</button>
+
+                  <% if (!item.is_delete) { %>
+                    <form action="/api/watches/delete/<%= item._id %>" method="POST"
+                      onsubmit="return confirm('Are you sure you want to delete this watch?');">
+                      <input type="hidden" name="_method" value="DELETE">
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <% } %>
+
+                      <% if (item.is_delete) { %>
+                        <form action="/api/watches/restore/<%= item._id %>" method="POST">
+                          <input type="hidden" name="_method" value="RESTORE">
+                          <button type="submit" class="btn btn-danger">Restore</button>
+                        </form>
+                        <% } %>
+
                 </td>
               </tr>
-            <% }) %>
-          <% } else { %>
-            <tr>
-              <td colspan="4">No watches available</td>
-            </tr>
-          <% } %>
+              <% }) %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="4">No watches available</td>
+                  </tr>
+                  <% } %>
         </tbody>
       </table>
     </div>
@@ -136,24 +245,33 @@
       const watchName = button.getAttribute('data-watchname');
       const image = button.getAttribute('data-image');
       const price = button.getAttribute('data-price');
+      const brand = button.getAttribute('data-brand');
+      const description = button.getAttribute('data-description');
+      const automatic = button.getAttribute('data-automatic');
 
       // Điền dữ liệu vào các trường input trong modal
       const modalTitle = editModal.querySelector('.modal-title');
       const modalBodyInputName = editModal.querySelector('#inputWatchName');
       const modalBodyInputImage = editModal.querySelector('#inputImage');
       const modalBodyInputPrice = editModal.querySelector('#inputPrice');
+      const modalBodyInputBrand = editModal.querySelector('#inputBrand');
+      const modalBodyInputDescription = editModal.querySelector('#inputWatchDescription');
+      const modalBodyInputAutomatic = editModal.querySelector('#inputAutomatic');
 
       modalTitle.textContent = 'Edit Watch: ' + watchName;
       modalBodyInputName.value = watchName;
       modalBodyInputImage.value = image;
       modalBodyInputPrice.value = price;
+      modalBodyInputBrand.value = brand;
+      modalBodyInputDescription.value = description;
+      modalBodyInputAutomatic.value = automatic;
 
       // Cập nhật action của form
       const form = editModal.querySelector('#editForm');
-      form.action = `/watch/${watchId}`; // Cập nhật action của form để gửi yêu cầu đến đúng endpoint
+      form.action = `/api/watches/${watchId}`; // Cập nhật action của form để gửi yêu cầu đến đúng endpoint
     });
   </script>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>

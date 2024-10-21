@@ -1,4 +1,7 @@
 const API_ROUTE = {
+    //auth
+    "LOGIN": "/login",
+    "REGISTER": "/register",
     //member
     "GET_ALL_MEMBER": "/",
     "GET_MEMBER_DETAIL": "/:id",

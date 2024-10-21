@@ -1,6 +1,20 @@
 const https = require('follow-redirects').https;
+function convertToInternationalFormat(phoneNumber) {
+    // Xóa các ký tự không phải số
+    const cleanedNumber = phoneNumber.replace(/\D/g, '');
 
-const sendSMS = ()=> {
+    // Kiểm tra độ dài và định dạng số điện thoại
+    if (cleanedNumber.length === 10 && cleanedNumber.startsWith('0')) {
+        // Chuyển đổi số điện thoại thành định dạng 84xxxx
+        const convertedNumber = '84' + cleanedNumber.slice(1);
+        return convertedNumber;
+    } else {
+        throw new Error('Số điện thoại không hợp lệ. Đảm bảo nó có 10 chữ số và bắt đầu bằng 0.');
+    }
+}
+
+const sendSMS = (phoneNumber) => {
+    const otp = generateOTP(6)
     var options = {
         'method': 'POST',
         'hostname': 'api.infobip.com',
@@ -29,20 +43,38 @@ const sendSMS = ()=> {
             console.error(error);
         });
     });
-
-    var postData = JSON.stringify({
-        "messages": [
-            {
-                "destinations": [{"to":"84342555702"}], // Số điện thoại nhận tin nhắn
-                "from": "84918414764", // ID người gửi
-                "text": "KangMin is chicken"
-            }
-        ]
-    });
+    const result = convertToInternationalFormat(phoneNumber);
+    if (result) {
+        var postData = JSON.stringify({
+            "messages": [
+                {
+                    "destinations": [{ "to": `${result}` }], // Số điện thoại nhận tin nhắn
+                    "from": "447491163443", // ID người gửi
+                    "text": `Your otp is ${otp}`
+                }
+            ]
+        });
+    }
 
     req.write(postData);
     req.end();
 }
 
+function generateOTP(length = 6) {
+    // Kiểm tra độ dài có hợp lệ không
+    if (length < 1) {
+        throw new Error("Độ dài OTP phải lớn hơn 0.");
+    }
+
+    let otp = '';
+    const digits = '0123456789'; // Chỉ sử dụng chữ số
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * digits.length);
+        otp += digits[randomIndex];
+    }
+
+    return otp;
+}
 // Gọi hàm sendSMS khi cần
-module.exports = {sendSMS};
+module.exports = { sendSMS, generateOTP };

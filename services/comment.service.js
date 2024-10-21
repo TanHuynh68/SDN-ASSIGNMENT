@@ -2,11 +2,11 @@ const commentModel = require("../models/comment.model");
 
 
 class commentService {
-    commentWatchService = async (req, res, watch, rating, member, content) => {
+    commentWatchService = async (req, res, watch, rating, author, content) => {
         try {
             watch.comments.push({
                 rating: rating,
-                author: member,
+                author: author,
                 content: content
             })
             const updatedWatch = await watch.save();
