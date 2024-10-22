@@ -11,12 +11,7 @@ const client = redis.createClient();
 const SECRET_KEY = process.env.SECRET_KEY;
 const EXPIRES_IN = process.env.EXPIRES_IN;
 
-client.connect()
-  .then(() => console.log('Connected to Redis'))
-  .catch(err => console.error('Redis connection error:', err));
 
-// Đảm bảo client không bị đóng trước khi sử dụng
-client.on('error', (err) => console.error('Redis Client Error', err));
 class authController {
 
     register = async (req, res) => {
