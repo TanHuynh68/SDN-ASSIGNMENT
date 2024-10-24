@@ -63,7 +63,7 @@ class authController {
                 const isMatch = await bcrypt.compare(password, member.password);
                 if (isMatch) {
                     const token = jwt.sign(
-                        { id: member._id, name: member.name, isAdmin: member.isAdmin },
+                        { _id: member._id, name: member.name, isAdmin: member.isAdmin },
                         SECRET_KEY,
                         { expiresIn: parseInt(EXPIRES_IN) }
                     );
@@ -78,7 +78,7 @@ class authController {
                     res.status(401).json({ message: "Password Invalid" });
                 }
             } else {
-                res.status(401).json({ message: "User Not Found" });
+                res.status(400).json({ message: "User Not Found" });
             }
         } catch (error) {
             console.error(error);
